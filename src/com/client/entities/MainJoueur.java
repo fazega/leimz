@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
+import com.client.events.EventListener;
 import com.client.network.NetworkManager;
 import com.client.utils.pathfinder.Chemin;
 import com.client.utils.pathfinder.Noeud;
@@ -15,6 +16,7 @@ public class MainJoueur extends Joueur
 {
 	//Evenements
 	private ArrayList<String> events = new ArrayList<String>();
+	private EventListener event_listener;
 	
 	//PATHFINDING
 	private Chemin current_chemin;
@@ -39,141 +41,167 @@ public class MainJoueur extends Joueur
 		{
 			instance = this;
 		}
+		
+		initEvents();
 	}
-
-	public void pollEvents(Input input)
-	{
-		/**
-		 * Gestion des �v�nements, pour le d�placement du perso
-		 * 
-		 */
-		if(input.isKeyDown(Input.KEY_D))
-		{
-			if(!events.contains("DROITE"))
-				events.add("DROITE");
-		}
-		if(input.isKeyDown(Input.KEY_Z))
-		{
-			if(!events.contains("HAUT"))
-				events.add("HAUT");
-		}
-		if(input.isKeyDown(Input.KEY_Q))
-		{
-			if(!events.contains("GAUCHE"))
-				events.add("GAUCHE");
-		}
-		if(input.isKeyDown(Input.KEY_S))
-		{
-			if(!events.contains("BAS"))
-				events.add("BAS");
-		}
-		if(input.isMousePressed(0))
-		{
-			if(!events.contains("PRESSED"))
-				events.add("PRESSED");
-		}
-		
-		
-		if(!input.isKeyDown(Input.KEY_D))
-		{
-			if(events.contains("DROITE"))
-				events.remove("DROITE");
-		}
-		if(!input.isKeyDown(Input.KEY_Z))
-		{
-			if(events.contains("HAUT"))
-				events.remove("HAUT");
-		}
-		if(!input.isKeyDown(Input.KEY_Q))
-		{
-			if(events.contains("GAUCHE"))
-				events.remove("GAUCHE");
-		}
-		if(!input.isKeyDown(Input.KEY_S))
-		{
-			if(events.contains("BAS"))
-				events.remove("BAS");
-		}
-		if(!input.isMouseButtonDown(0))
-		{
-			if(events.contains("PRESSED"))
-				events.remove("PRESSED");
-		}
-		
-		
-		if(events.contains("GAUCHE") && !(events.contains("DROITE") && events.contains("HAUT") && events.contains("BAS")))
-		{
-			setOrientation(Orientation.GAUCHE);
-		}
-		if(events.contains("DROITE") && !(events.contains("DROITE") && events.contains("HAUT") && events.contains("BAS")))
-		{
-			setOrientation(Orientation.DROITE);
-		}
-		if(events.contains("HAUT") && !(events.contains("DROITE") && events.contains("HAUT") && events.contains("BAS")))
-		{
-			setOrientation(Orientation.HAUT);
-		}
-		if(events.contains("BAS") && !(events.contains("DROITE") && events.contains("HAUT") && events.contains("BAS")))
-		{
-			setOrientation(Orientation.BAS);
-		}
-		if(events.contains("GAUCHE") && events.contains("HAUT") && !(events.contains("DROITE") && events.contains("BAS")))
-		{
-			setOrientation(Orientation.HAUT_GAUCHE);
-		}
-		if(events.contains("DROITE") && events.contains("HAUT") && !(events.contains("GAUCHE") && events.contains("BAS")))
-		{
-			setOrientation(Orientation.HAUT_DROITE);
-		}
-		if(events.contains("GAUCHE") && events.contains("BAS") && !(events.contains("DROITE") && events.contains("HAUT")))
-		{
-			setOrientation(Orientation.BAS_GAUCHE);
-		}
-		if(events.contains("DROITE") && events.contains("BAS") && !(events.contains("GAUCHE") && events.contains("HAUT")))
-		{
-			setOrientation(Orientation.BAS_DROITE);
-		}
-		
-		if(events.contains("BAS") || events.contains("HAUT") || events.contains("DROITE") || events.contains("GAUCHE"))
-		{
-			moveKey();
-		}
 	
-		
-		/**
-		 * Gestion des �v�nements, pour la vitesse du perso
-		 * 
-		 */
-		
-		if(input.isKeyDown(Input.KEY_LSHIFT))
-		{
-			events.add("SPEED+");
-			setSpeed(2.0f);
-		}
-		if(!input.isKeyDown(Input.KEY_LSHIFT))
-		{
-			if(events.contains("SPEED+"))
+	private void initEvents()
+	{
+		event_listener = new EventListener() {
+			
+			@Override
+			public void pollEvents() 
 			{
-				events.remove("SPEED+");
-				setSpeed(1.0f);
+				if(events.contains("GAUCHE") && !(events.contains("DROITE") && events.contains("HAUT") && events.contains("BAS")))
+				{
+					setOrientation(Orientation.GAUCHE);
+				}
+				if(events.contains("DROITE") && !(events.contains("DROITE") && events.contains("HAUT") && events.contains("BAS")))
+				{
+					setOrientation(Orientation.DROITE);
+				}
+				if(events.contains("HAUT") && !(events.contains("DROITE") && events.contains("HAUT") && events.contains("BAS")))
+				{
+					setOrientation(Orientation.HAUT);
+				}
+				if(events.contains("BAS") && !(events.contains("DROITE") && events.contains("HAUT") && events.contains("BAS")))
+				{
+					setOrientation(Orientation.BAS);
+				}
+				if(events.contains("GAUCHE") && events.contains("HAUT") && !(events.contains("DROITE") && events.contains("BAS")))
+				{
+					setOrientation(Orientation.HAUT_GAUCHE);
+				}
+				if(events.contains("DROITE") && events.contains("HAUT") && !(events.contains("GAUCHE") && events.contains("BAS")))
+				{
+					setOrientation(Orientation.HAUT_DROITE);
+				}
+				if(events.contains("GAUCHE") && events.contains("BAS") && !(events.contains("DROITE") && events.contains("HAUT")))
+				{
+					setOrientation(Orientation.BAS_GAUCHE);
+				}
+				if(events.contains("DROITE") && events.contains("BAS") && !(events.contains("GAUCHE") && events.contains("HAUT")))
+				{
+					setOrientation(Orientation.BAS_DROITE);
+				}
+				
+				if(events.contains("BAS") || events.contains("HAUT") || events.contains("DROITE") || events.contains("GAUCHE"))
+				{
+					moveKey();
+				}
 			}
-		}
-		
-		float mouseX = input.getMouseX();
-		float mouseY = input.getMouseY();
-		
-		if((new Rectangle(this.pos_real_on_screen.x+this.corps.getX(), this.pos_real_on_screen.y+this.corps.getY(), this.corps.getWidth(), this.corps.getHeight())).contains(mouseX, mouseY))
-		{
-			etat = Etat.OVER;
-			if(input.isMouseButtonDown(0))
+			
+			@Override
+			public void mouseWheelMoved(int change) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseReleased(int button, int x, int y) 
 			{
-				etat = Etat.CLICKED;
+				if(button == Input.MOUSE_LEFT_BUTTON)
+				{
+					if(events.contains("PRESSED"))
+						events.remove("PRESSED");
+				}
+				
 			}
-		}
-		else
-		{
-			etat = Etat.NORMAL;
-		}
+			
+			@Override
+			public void mousePressed(int button, int x, int y) {
+				if(button == Input.MOUSE_LEFT_BUTTON)
+				{
+					if(!events.contains("PRESSED"))
+						events.add("PRESSED");
+				}
+			}
+
+			@Override
+			public void keyPressed(int key, char c) 
+			{
+				if(key == Input.KEY_D)
+				{
+					if(!events.contains("DROITE"))
+						events.add("DROITE");
+				}
+				if(key == Input.KEY_Z)
+				{
+					if(!events.contains("HAUT"))
+						events.add("HAUT");
+				}
+				if(key == Input.KEY_Q)
+				{
+					if(!events.contains("GAUCHE"))
+						events.add("GAUCHE");
+				}
+				if(key == Input.KEY_S)
+				{
+					if(!events.contains("BAS"))
+						events.add("BAS");
+				}
+				
+				if(key == Input.KEY_LSHIFT)
+				{
+					events.add("SPEED+");
+					setSpeed(2.0f);
+				}
+			}
+
+			@Override
+			public void keyReleased(int key, char c) {
+				if(key == Input.KEY_D)
+				{
+					if(events.contains("DROITE"))
+						events.remove("DROITE");
+				}
+				if(key == Input.KEY_Z)
+				{
+					if(events.contains("HAUT"))
+						events.remove("HAUT");
+				}
+				if(key == Input.KEY_Q)
+				{
+					if(events.contains("GAUCHE"))
+						events.remove("GAUCHE");
+				}
+				if(key == Input.KEY_S)
+				{
+					if(events.contains("BAS"))
+						events.remove("BAS");
+				}
+				
+				if(key == Input.KEY_LSHIFT)
+				{
+					if(events.contains("SPEED+"))
+					{
+						events.remove("SPEED+");
+						setSpeed(1.0f);
+					}
+				}
+			}
+
+			@Override
+			public void mouseMoved(int oldx, int oldy, int newx, int newy) {
+				float mouseX = newx;
+				float mouseY = newy;
+				
+				if((new Rectangle(pos_real_on_screen.x+corps.getX(), pos_real_on_screen.y+corps.getY(), corps.getWidth(), corps.getHeight())).contains(mouseX, mouseY))
+				{
+					etat = Etat.OVER;
+					if(events.contains("PRESSED"));
+					
+					{
+						etat = Etat.CLICKED;
+					}
+				}
+				else
+				{
+					etat = Etat.NORMAL;
+				}
+				
+			}
+		};
 	}
 	
 	
@@ -368,5 +396,15 @@ public class MainJoueur extends Joueur
 		//QUETES
 		perso.getQuetes_manager().testQuetes(this);
 	}
+
+	public EventListener getEvent_listener() {
+		return event_listener;
+	}
+
+	public void setEvent_listener(EventListener event_listener) {
+		this.event_listener = event_listener;
+	}
+	
+	
 
 }

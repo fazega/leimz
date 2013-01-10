@@ -6,7 +6,7 @@ import org.newdawn.slick.InputListener;
 public abstract class EventListener implements InputListener
 {
 	
-	public abstract void pollEvents(Input input);
+	public abstract void pollEvents();
 	
 	
 	@Override
@@ -21,9 +21,7 @@ public abstract class EventListener implements InputListener
 	}
 
 	@Override
-	public void mouseMoved(int oldx, int oldy, int newx, int newy) {
-		
-	}
+	public abstract void mouseMoved(int oldx, int oldy, int newx, int newy);
 
 	@Override
 	public abstract void mousePressed(int button, int x, int y);
@@ -55,15 +53,11 @@ public abstract class EventListener implements InputListener
 	}
 
 	@Override
-	public void keyPressed(int key, char c) {
-		
-	}
+	public abstract void keyPressed(int key, char c);
 
 	@Override
-	public void keyReleased(int key, char c) {
-		
-	}
-
+	public abstract void keyReleased(int key, char c);
+	
 	@Override
 	public void controllerButtonPressed(int arg0, int arg1) {
 		

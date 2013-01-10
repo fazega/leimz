@@ -12,8 +12,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.client.entities.MainJoueur;
+import com.client.entities.managers.EntitiesManager;
 import com.client.utils.gui.PrincipalGui;
-import com.game_entities.managers.EntitiesManager;
 import com.gameplay.Caracteristique;
 import com.gameplay.managers.CombatManager;
 

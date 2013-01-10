@@ -2,10 +2,10 @@ package com.client.load;
 
 import java.awt.Font;
 import com.client.entities.MainJoueur;
+import com.client.entities.managers.EntitiesManager;
+import com.client.entities.managers.PNJsManager;
+import com.client.entities.managers.PlayersManager;
 import com.client.gamestates.Base;
-import com.game_entities.managers.EntitiesManager;
-import com.game_entities.managers.PNJsManager;
-import com.game_entities.managers.PlayersManager;
 import com.map.Map;
 import com.map.client.managers.MapManager;
 import org.newdawn.slick.Color;

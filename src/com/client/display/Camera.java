@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import org.newdawn.slick.geom.Vector2f;
 
 import com.client.entities.Entity;
+import com.client.entities.managers.EntitiesManager;
 import com.client.gamestates.Base;
-import com.game_entities.managers.EntitiesManager;
 import com.map.Grille;
 import com.map.Map;
 import com.map.Tile;

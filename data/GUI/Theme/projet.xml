@@ -720,8 +720,8 @@
                         </map></param>
                         <theme name="image" ref="-defaults"/>
                         <param name="mouseCursor.link"><cursor>cursor.finger</cursor></param>
-        <param name="maxWidth"><int>200</int></param>
-        <param name="maxHeight"><int>200</int></param>
+        <param name="maxWidth"><int>500</int></param>
+        <param name="maxHeight"><int>500</int></param>
         <param name="minWidth"><int>30</int></param>
         <param name="minHeight"><int>30</int></param>
                     </theme>
@@ -753,8 +753,13 @@
   <theme name="bullewidget" ref="-defaults">
         <param name="background"><image>bullewidget.background</image></param>
         <param name="border"><border>15,23,35,23</border></param>
-        <param name="maxHeight"><int>1000</int></param>
-        <param name="maxWidth"><int>1000</int></param>
+        <param name="maxHeight"><int>200</int></param>
+        <param name="maxWidth"><int>200</int></param>
+        <param name="minWidth"><int>90</int></param>
+        <param name="minHeight"><int>65</int></param>
+        <theme name="textarea" ref="textarea">
+            <param name="maxWidth"><int>154</int></param>
+        </theme>
     </theme>
 
 </themes>

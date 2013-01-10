@@ -2,19 +2,19 @@ package com.client.utils.gui;
 
 import org.lwjgl.Sys;
 import org.newdawn.slick.geom.Vector2f;
+
 import com.client.display.gui.GUI_Manager;
 import com.client.entities.Joueur;
 import com.client.entities.MainJoueur;
+import com.client.entities.managers.EntitiesManager;
 import com.client.network.NetworkListener;
 import com.client.network.NetworkManager;
-import com.game_entities.managers.EntitiesManager;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.EditField;
 import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.ResizableFrame;
 import de.matthiasmann.twl.ScrollPane;
 import de.matthiasmann.twl.TextArea;
-import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
 
 
@@ -24,7 +24,6 @@ public class ChatFrame extends ResizableFrame implements NetworkListener
     private final HTMLTextAreaModel textAreaModel;
     private final TextArea textArea;
     
-
 	private final EditField editField;
     private final ScrollPane scrollPane;
     private String curColor = "black";
@@ -169,7 +168,7 @@ public class ChatFrame extends ResizableFrame implements NetworkListener
     	}
     	else
     	{
-    		NetworkManager.instance.sendToServer("sa;"+MainJoueur.instance.getPerso().getNom()+";"+editField.getText());
+    		NetworkManager.instance.sendToServer("sa;"+MainJoueur.instance.getPerso().getNom()+";a;"+editField.getText());
     	}
     }
     
@@ -178,29 +177,31 @@ public class ChatFrame extends ResizableFrame implements NetworkListener
 	public void receiveMessage(String str) 
 	{
 		String[] temp = str.split(";");
-    	appendRow("default", temp[0] + " : " + temp[1]);
-    	createBulle(temp[0], temp[1]);
-    	
+    	appendRow("default", temp[0] + " : " + temp[2]);
+    	createBulle(temp[0], temp[2]);
 	}
 	
 	private void createBulle(String nom_perso, String text)
 	{
-		Joueur joueur = EntitiesManager.instance.getPlayers_manager().getJoueur(nom_perso);
+		final String ftext = text;
+		final Joueur joueur = EntitiesManager.instance.getPlayers_manager().getJoueur(nom_perso);
+		System.out.println("Bubble to create.");
+		GUI_Manager.instance.getGui().invokeLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				TextBubble bubble = new TextBubble(ftext);
+				PrincipalGui.instance.addBacksideWidget(bubble);
+				bubble.getTextarea().adjustSize();
+				bubble.adjustSize();
+				bubble.setPosition((int)(joueur.getPos_real_on_screen().x-
+						bubble.getWidth())+28, (int)(joueur.getPos_real_on_screen().y-
+								bubble.getHeight()));
+				System.out.println("Bubble créée !");
+			}
+		});
 		
-		Widget container = new Widget();
-		container.setTheme("/bullewidget");
 		
-		HTMLTextAreaModel model = new HTMLTextAreaModel();
-		TextArea bulle = new TextArea(model);
-		bulle.setTheme("/textarea");
-		model.setHtml("<div style=\"font-family: default; \">"+"caca"+"</div>");
-		container.add(bulle);
-		GUI_Manager.instance.getRoot().add(bulle);
-		container.adjustSize();
-		container.setPosition(50,50);
-		container.setPosition((int)(joueur.getPos_real_on_screen().x-
-				bulle.getWidth())+28, (int)(joueur.getPos_real_on_screen().y-
-						bulle.getHeight()));
 	}
 
     private boolean isURLChar(char ch) {

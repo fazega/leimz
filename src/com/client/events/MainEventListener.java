@@ -9,12 +9,12 @@ import com.client.display.gui.GUI_Manager;
 import com.client.entities.Joueur;
 import com.client.entities.MainJoueur;
 import com.client.entities.PNJ;
+import com.client.entities.managers.EntitiesManager;
 import com.client.gamestates.Base;
 import com.client.network.NetworkManager;
 import com.client.utils.gui.PnjDialogFrame;
 import com.client.utils.gui.PrincipalGui;
 import com.client.utils.pathfinder.PathFinder;
-import com.game_entities.managers.EntitiesManager;
 import com.gameplay.managers.CombatManager;
 import com.map.Tile;
 import com.map.client.managers.MapManager;
@@ -27,34 +27,20 @@ public class MainEventListener extends EventListener
 {
 	public static MainEventListener instance;
 	
+	private Input input;
+	
 	private PathFinder pf;
 	
-	public MainEventListener(PathFinder pf)
+	public MainEventListener(PathFinder pf, Input input)
 	{
 		this.pf = pf;
+		this.input = input;
 	}
 	
 	@Override
-	public void pollEvents(Input input)
+	public void pollEvents()
 	{
-		if(input.isKeyPressed(Input.KEY_ESCAPE))
-			PrincipalGui.instance.getMenu().setVisible(!PrincipalGui.instance.getMenu().isVisible());
 		
-		if(input.isKeyPressed(Input.KEY_I))
-			PrincipalGui.instance.getInventaireUI().setVisible(!PrincipalGui.instance.getInventaireUI().isVisible());
-		
-		
-		if(input.isKeyPressed(Input.KEY_SPACE))
-		{
-			if(MainJoueur.instance.getPerso().getSorts().get(0).equals(MainJoueur.instance.getPerso().getCurrent_sort()))
-			{
-				MainJoueur.instance.getPerso().setCurrent_sort(null);
-			}
-			else
-			{
-				MainJoueur.instance.getPerso().setCurrent_sort(MainJoueur.instance.getPerso().getSorts().get(1));
-			}
-		}
 		
 		if(input.isMousePressed(0))
 		{
@@ -152,4 +138,39 @@ public class MainEventListener extends EventListener
 	@Override
 	public void mouseWheelMoved(int change) {
 	}
+	
+	@Override
+	public void keyPressed(int key, char c) {
+		if(key == Input.KEY_ESCAPE)
+			PrincipalGui.instance.getMenu().setVisible(!PrincipalGui.instance.getMenu().isVisible());
+		
+		if(key==Input.KEY_I)
+			PrincipalGui.instance.getInventaireUI().setVisible(!PrincipalGui.instance.getInventaireUI().isVisible());
+		
+		if(key ==Input.KEY_SPACE)
+		{
+			if(MainJoueur.instance.getPerso().getSorts().get(1).equals(MainJoueur.instance.getPerso().getCurrent_sort()))
+			{
+				MainJoueur.instance.getPerso().setCurrent_sort(null);
+			}
+			else
+			{
+				MainJoueur.instance.getPerso().setCurrent_sort(MainJoueur.instance.getPerso().getSorts().get(1));
+			}
+		}
+	}
+
+	@Override
+	public void mouseMoved(int oldx, int oldy, int newx, int newy) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyReleased(int key, char c) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 }

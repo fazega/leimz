@@ -1,11 +1,10 @@
 package com.client.display.gui;
 
 import de.matthiasmann.twl.GUI;
-
-
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.util.InputAdapter;
+
 
 /**
  * A Slick InputListener which delegates to TWL.
@@ -46,7 +45,6 @@ public class TWLInputAdapter extends InputAdapter {
 		if (!ignoreMouse) {
 			if (gui.handleMouseWheel(change)) {
 				consume();
-				
 			}
 			else
 			{
@@ -70,8 +68,7 @@ public class TWLInputAdapter extends InputAdapter {
 				consume();
 				lastPressConsumed = true;
 			}
-			else
-			{
+			else {
 				on_gui_event = false;
 			}
 		}
@@ -85,8 +82,7 @@ public class TWLInputAdapter extends InputAdapter {
 			if (gui.handleMouse(x, y, button, false)) {
 				consume();
 			}
-			else
-			{
+			else {
 				on_gui_event = false;
 			}
 		} else if (mouseDown == 0) {
@@ -104,8 +100,7 @@ public class TWLInputAdapter extends InputAdapter {
 			if (gui.handleMouse(newX, newY, -1, false)) {
 				consume();
 			}
-			else if(!on_gui_event)
-			{
+			else if(on_gui_event) {
 				on_gui_event = false;
 			}
 		}
@@ -118,13 +113,14 @@ public class TWLInputAdapter extends InputAdapter {
 
 	@Override
 	public void keyPressed(int key, char c) {
+		System.out.println("Key pressed TWL !");
 		if (gui.handleKey(key, c, true)) {
 			consume();
 		}
-		else
-		{
+		else {
 			on_gui_event = false;
-		}
+			}
+		
 	}
 
 	@Override
@@ -132,8 +128,7 @@ public class TWLInputAdapter extends InputAdapter {
 		if (gui.handleKey(key, c, false)) {
 			consume();
 		}
-		else
-		{
+		else {
 			on_gui_event = false;
 		}
 	}
@@ -143,16 +138,15 @@ public class TWLInputAdapter extends InputAdapter {
 		if (!ignoreMouse && lastPressConsumed) {
 			consume();
 		}
-		else
-		{
+		else {
 			on_gui_event = false;
 		}
 	}
 
 	private void consume() 
 	{
-		input.consumeEvent();
 		on_gui_event = true;
+		input.consumeEvent();
 	}
 
 	@Override

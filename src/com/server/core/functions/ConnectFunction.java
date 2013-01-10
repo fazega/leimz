@@ -44,27 +44,30 @@ public class ConnectFunction implements Functionable
 				rsj = stmt.executeQuery("SELECT currjoueur,connected FROM Account " +
 						"WHERE nom_de_compte='"+ndc+"' " +
 						"AND mot_de_passe='"+mdp+"'");
-				rsj.next();
 			} catch (SQLException e) {
 				throw new RuntimeException("Issue with executing query (syntax ?) for finding account");
 			}
 			
 			String name="";
+			boolean connected=false;
 			try 
 			{
+				rsj.next();
 				name = rsj.getString("currjoueur");
-			
-				boolean connected = rsj.getBoolean("connected");
-				if(connected)
-					throw new RuntimeException("Account already connected");
-
-				if(name.isEmpty())
-					throw new RuntimeException("No player for account "+ndc);
+				connected = rsj.getBoolean("connected");
 			} 
 			catch (SQLException e) {
 				c.sendToClient("c;CONNECT_FAILED;INCORRECT_NDC_PASS");
 				throw new RuntimeException("Connection failed : information set doesn't return any account");
 			}
+			
+			if(connected)
+			{
+				c.sendToClient("c;CONNECT_FAILED;ALREADY_CONNECTED");
+				throw new RuntimeException("Account already connected");
+			}
+			
+				
 			
 			try {
 				rsj.close();

@@ -1,5 +1,6 @@
 package com.client.utils.gui;
 
+import java.util.ArrayList;
 import com.client.display.gui.GUI_Manager;
 import com.client.entities.MainJoueur;
 import com.client.gamestates.Base;
@@ -8,6 +9,7 @@ import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.ResizableFrame;
+import de.matthiasmann.twl.Widget;
 
 public class PrincipalGui implements NetworkListener
 {
@@ -15,6 +17,8 @@ public class PrincipalGui implements NetworkListener
 	private InventaireUI inventaireUI;
 	private FenCaracs fencaracs;
 	private ResizableFrame menu;
+	
+	private ArrayList<Widget> backside_widgets;
 	
 	public static PrincipalGui instance = null;
 	public static int YES_NO_PANE = 0, CANCEL_PANE = 1;
@@ -27,6 +31,8 @@ public class PrincipalGui implements NetworkListener
 	
 	private void init()
 	{
+		backside_widgets = new ArrayList<Widget>();
+		
 		chat_frame = new ChatFrame(null);
         chat_frame.setTheme("/resizableframe");
         chat_frame.setTitle("Leimzochat");
@@ -87,6 +93,27 @@ public class PrincipalGui implements NetworkListener
 	
 	public void refresh()
 	{
+		boolean already_bubble =false;
+		TextBubble first = null;
+		for(int i = 0; i < backside_widgets.size(); i++)
+		{
+			if(backside_widgets.get(i) instanceof TextBubble)
+			{
+				first = (TextBubble) backside_widgets.get(i);
+				if(((TextBubble)backside_widgets.get(i)).getChrono().getTime() > 5000)
+				{
+					GUI_Manager.instance.getRoot().removeChild(backside_widgets.get(i));
+					backside_widgets.remove(backside_widgets.get(i));
+				}
+				else if(already_bubble)
+				{
+					GUI_Manager.instance.getRoot().removeChild(first);
+					backside_widgets.remove(first);
+				}
+				already_bubble =true;
+			}
+		}
+		
 		this.inventaireUI.refresh(MainJoueur.instance.getPerso().getInventaire());
 		InventairePanel inventory_panel = this.inventaireUI.getInventory_panel();
 		for(int i = 0; i < inventory_panel.getSlots().size(); i++)
@@ -108,7 +135,7 @@ public class PrincipalGui implements NetworkListener
 		}
 	}
 	
-
+	
 	@Override
 	public void receiveMessage(String str) 
 	{
@@ -149,6 +176,12 @@ public class PrincipalGui implements NetworkListener
 		
 		return frame;
 	}
+	
+	public void addBacksideWidget(Widget widget)
+	{
+		GUI_Manager.instance.getRoot().insertChild(widget,0);
+		backside_widgets.add(widget);
+	}
 
 	public ChatFrame getChat_frame() {
 		return chat_frame;
@@ -182,6 +215,12 @@ public class PrincipalGui implements NetworkListener
 		this.menu = menu;
 	}
 
-	
+	public ArrayList<Widget> getBackside_widgets() {
+		return backside_widgets;
+	}
+
+	public void setBackside_widgets(ArrayList<Widget> backside_widgets) {
+		this.backside_widgets = backside_widgets;
+	}
 	
 }

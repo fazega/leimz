@@ -10,12 +10,12 @@ import com.client.display.Camera;
 import com.client.display.DisplayManager;
 import com.client.display.gui.GUI_Manager;
 import com.client.entities.MainJoueur;
+import com.client.entities.managers.EntitiesManager;
 import com.client.events.MainEventListener;
 import com.client.network.NetworkManager;
 import com.client.utils.Data;
 import com.client.utils.gui.PrincipalGui;
 import com.client.utils.pathfinder.PathFinder;
-import com.game_entities.managers.EntitiesManager;
 import com.gameplay.managers.CombatManager;
 import com.map.client.managers.MapManager;
 
@@ -84,7 +84,9 @@ public class Principal extends BasicGameState
 		
 		pathfinder = new PathFinder(map_manager.getEntire_map());
 		
-		event_listener = new MainEventListener(pathfinder);
+		event_listener = new MainEventListener(pathfinder, gc.getInput());
+		gc.getInput().addListener(event_listener);
+		gc.getInput().addListener(MainJoueur.instance.getEvent_listener());
 		
 		maingui = new PrincipalGui();
 	}
@@ -118,6 +120,7 @@ public class Principal extends BasicGameState
 	public void update(GameContainer gc, StateBasedGame sbg, int delta)
 			throws SlickException 
 	{		
+		
 		gc.setMinimumLogicUpdateInterval(10);
 		gc.setMaximumLogicUpdateInterval(10);
 
@@ -159,11 +162,13 @@ public class Principal extends BasicGameState
 		
 		combatManager.refresh();
 		
+		PrincipalGui.instance.refresh();
+		
 		GUI_Manager.instance.getTwlInputAdapter().update();
 		if(!GUI_Manager.instance.getTwlInputAdapter().isOn_gui_event())
 		{
-			event_listener.pollEvents(gc.getInput());
-			main_player.pollEvents(gc.getInput());
+			event_listener.pollEvents();
+			main_player.getEvent_listener().pollEvents();
 			for(int i = 0; i < entities_manager.getPnjs_manager().getPnjs().size(); i++)
 			{
 				entities_manager.getPnjs_manager().getPnjs().get(i).pollEvents(gc.getInput());

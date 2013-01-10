@@ -208,7 +208,8 @@ public class Identification extends BasicGameState
 		}
 
 		network.waitForNewMessage("c");
-		if(network.receiveFromServer("c").equals("CONNECT_SUCCEED"))
+		String confirm = network.receiveFromServer("c");
+		if(confirm.equals("CONNECT_SUCCEED"))
 		{
 			System.out.println("Connection OK.");
 			music.stop();
@@ -216,7 +217,15 @@ public class Identification extends BasicGameState
 		}
 		else 
 		{
-			openPopup("Nom de compte ou mot de passe incorrect. Veuillez reessayer :p");
+			String info = confirm.split(";")[1];
+			if(info.equals("INCORRECT_NDC_PASS"))
+			{
+				openPopup("Nom de compte ou mot de passe incorrect. Veuillez reessayer :p");
+			}
+			else
+			{
+				openPopup("Compte déjà connecté.");
+			}
 		}
 	}
 
